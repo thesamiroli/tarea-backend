@@ -1,0 +1,11 @@
+{
+  "name": "todo-application-nodejs",
+  "version": "1.0.0",
+  "description": "Restful API for Todo Application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Samir Oli",
+  "license": "ISC"
+}
