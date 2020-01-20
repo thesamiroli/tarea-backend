@@ -1,38 +1,58 @@
-const getAllTodos = function(req, res, next){
-    res.status(200).json({
-        message: 'From Get All Todos'
-    });
-}
+const todoService = require("../services/todoService");
 
-const getSpecificTodo = function(req, res, next){
-    res.status(200).json({
-        message: 'From Get Specific Todo' + req.params.id
-    });
-}
+const getAllTodos = async function(req, res, next) {
+  const response = await todoService.getAllTodos(req.userData.userId);
 
-const deleteTodo = function(req, res, next){
-    res.status(200).json({
-        message: 'From Delete Todo' + req.params.id
-    });
-}
+  res.status(200).json(response);
+};
 
-const addTodo = function(req, res, next) {
-    res.status(200).json({
-        message: 'From Add Todo'
+const getSpecificTodo = async function(req, res, next) {
+  const todoId = req.params.id;
+  const response = await todoService.getSpecificTodo(
+    req.userData.userId,
+    todoId
+  );
+  res.status(200).json(response);
+};
+
+const addTodo = async function(req, res, next) {
+  const response = await todoService.addTodo(req.userData.userId, req.body);
+  res.status(200).json({
+    message: "Todo Added Successfully",
+    todo: response
+  });
+};
+
+const updateTodo = async function(req, res, next) {
+  const todoId = req.params.id;
+  const response = await todoService.updateTodo(
+    req.userData.userId,
+    todoId,
+    req.body
+  );
+
+  res.json(200).json({
+    message: "Todo Updated Successfully",
+    updateTodo: response
+  });
+};
+
+const deleteTodo = function(req, res, next) {
+  const todoId = req.params.id;
+  todoService
+    .deleteTodo(req.userData.userId, todoId)
+    .then(data => {
+      res.status(200).json({ message: "Todo Deleted Successfully" });
     })
-}
-
-const updateTodo = function(req, res, next){
-    res.status(200).json({
-        message: 'From Update Todo' + req.params.id
+    .catch(err => {
+      next(err);
     });
-}
-
+};
 
 module.exports = {
-    getAllTodos : getAllTodos,
-    getSpecificTodo : getSpecificTodo,
-    deleteTodo : deleteTodo,
-    addTodo : addTodo,
-    updateTodo : updateTodo
-}
+  getAllTodos: getAllTodos,
+  getSpecificTodo: getSpecificTodo,
+  deleteTodo: deleteTodo,
+  addTodo: addTodo,
+  updateTodo: updateTodo
+};

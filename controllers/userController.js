@@ -1,30 +1,26 @@
-const signup = function(req, res, next) {
-  res.status(200).json({
-    message: "From Signup"
-  });
+const userService = require("../services/userService");
+
+const signup = async function(req, res, next) {
+  const response = await userService.signup(
+    req.body.email,
+    req.body.username,
+    req.body.password
+  );
+  if (response != null) {
+    res.status(200).json(response);
+  } else {
+    res.status(500).json({
+      message: "Something is not right"
+    });
+  }
 };
 
-const login = function(req, res, next) {
-  res.status(200).json({
-    message: "From Login"
-  });
-};
-
-const updateUser = function(req, res, next) {
-  res.status(200).json({
-    message: "From Update User" + req.params.id
-  });
-};
-
-const deleteUser = function(req, res, next) {
-  res.status(200).json({
-    message: "From Delete User" + req.params.id
-  });
+const login = async function(req, res, next) {
+  const response = await userService.login(req.body.email, req.body.password);
+  res.json({ response });
 };
 
 module.exports = {
   signup: signup,
-  login: login,
-  updateUser: updateUser,
-  deleteUser: deleteUser
+  login: login
 };
