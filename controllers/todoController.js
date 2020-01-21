@@ -37,16 +37,12 @@ const updateTodo = async function(req, res, next) {
   });
 };
 
-const deleteTodo = function(req, res, next) {
+const deleteTodo = async function(req, res, next) {
   const todoId = req.params.id;
-  todoService
-    .deleteTodo(req.userData.userId, todoId)
-    .then(data => {
-      res.status(200).json({ message: "Todo Deleted Successfully" });
-    })
-    .catch(err => {
-      next(err);
-    });
+  await todoService.deleteTodo(req.userData.userId, todoId);
+  res.json(200).json({
+    message: "Todo Deleted Successfully"
+  });
 };
 
 module.exports = {

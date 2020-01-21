@@ -7,6 +7,7 @@ const app = express();
 const mongoConnection = require("./database/connection");
 const errorRoute = require("./utils/error");
 
+app.use(cors());
 mongoConnection.start();
 app.use(morgan("dev"));
 parser(app);

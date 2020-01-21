@@ -6,7 +6,14 @@ const getAllTodos = async function(userId) {
   return response;
 };
 
-const getSpecificTodo = function(userId, todoId) {};
+const getSpecificTodo = async function(userId, todoId) {
+  const response = await Todo.find({
+    authorId: userId,
+    _id: todoId
+  });
+  console.log("TS14", response);
+  return response;
+};
 
 const addTodo = async function(userId, todoBody) {
   const todo = new Todo({
@@ -23,9 +30,16 @@ const addTodo = async function(userId, todoBody) {
   return response;
 };
 
-const deleteTodo = function(userId, todoId) {};
+const deleteTodo = async function(userId, todoId) {
+  await Todo.deleteOne({
+    _id: todoId,
+    authorId: userId
+  });
+};
 
-const updateTodo = function(userId, todoId, updatedTodo) {};
+const updateTodo = function(userId, todoId, updatedTodo) {
+  const response = Todo.update();
+};
 
 module.exports = {
   getAllTodos: getAllTodos,
