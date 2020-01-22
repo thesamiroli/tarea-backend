@@ -1,26 +1,20 @@
 const userService = require("../services/userService");
 
-const signup = async function(req, res, next) {
-  const response = await userService.signup(
+const register = async function(req, res, next) {
+  const response = await userService.register(
     req.body.email,
     req.body.username,
     req.body.password
   );
-  if (response != null) {
-    res.status(200).json(response);
-  } else {
-    res.status(500).json({
-      message: "Something is not right"
-    });
-  }
+  res.status(response.statusCode).send(response.message);
 };
 
 const login = async function(req, res, next) {
   const response = await userService.login(req.body.email, req.body.password);
-  res.json({ response });
+  res.status(response.statusCode).send(response.message);
 };
 
 module.exports = {
-  signup: signup,
+  register: register,
   login: login
 };

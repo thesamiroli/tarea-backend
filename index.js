@@ -6,6 +6,7 @@ const parser = require("./utils/parser");
 const app = express();
 const mongoConnection = require("./database/connection");
 const errorRoute = require("./utils/error");
+const cors = require("cors");
 
 app.use(cors());
 mongoConnection.start();

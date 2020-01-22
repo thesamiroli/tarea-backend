@@ -2,7 +2,32 @@ const mongoose = require("mongoose");
 const authorization = require("../middlewares/authorization");
 const User = require("../models/user");
 
-const signup = async function(inputEmail, inputUsername, inputPassword) {
+const sendResponse = function(status, msg) {
+  return {
+    statusCode: status,
+    message: msg
+  };
+};
+
+const checkForDuplicate = async function(key, value) {
+  let isDuplicate = false;
+  await User.find({ [key]: value }).then(response => {
+    if (!(response.length == 0)) {
+      isDuplicate = true;
+    }
+  });
+  return isDuplicate;
+};
+
+const register = async function(inputEmail, inputUsername, inputPassword) {
+  if (await checkForDuplicate("email", inputEmail)) {
+    return sendResponse(409, "Email already exists");
+  }
+
+  if (await checkForDuplicate("username", inputUsername)) {
+    return sendResponse(409, "Username already exists");
+  }
+
   const user = new User({
     _id: new mongoose.Types.ObjectId(),
     email: inputEmail,
@@ -10,44 +35,24 @@ const signup = async function(inputEmail, inputUsername, inputPassword) {
     password: inputPassword
   });
 
-  const addUser = await user
-    .save()
-    .then(result => result)
-    .catch(err => err);
+  await user.save().catch(err => console.log(err));
 
-  return addUser;
+  return sendResponse(200, "User added successfully");
 };
 
-const login = function(inputEmail, inputPassword) {
-  const response = User.find({ email: inputEmail })
-    .exec()
-    .then(user => {
-      if (inputPassword == user[0].password) {
-        const token = authorization.generateToken(user);
-        const success = {
-          status: 200,
-          message: "Authorization Successful",
-          token: token
-        };
-        return success;
-      } else {
-        return {
-          status: 400,
-          message: "Wrong Password"
-        };
-      }
-    })
-    .catch(err => {
-      return {
-        status: 400,
-        message: "Username not found"
-      };
-    });
-
+const login = async function(inputEmail, inputPassword) {
+  const response = await User.find({ email: inputEmail }).then(response => {
+    if (response.length > 0) {
+      if (inputPassword == response[0].password) {
+        authorization.generateToken(response);
+        return sendResponse(200, "Authorization successful");
+      } else return sendResponse(401, "Wrong Password");
+    } else return sendResponse(401, "Email not found");
+  });
   return response;
 };
 
 module.exports = {
   login: login,
-  signup: signup
+  register: register
 };
