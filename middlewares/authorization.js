@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const verifyToken = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
+    console.log(req.headers);
     console.log("Authorization 6, Token: ", token);
     const decoded = jwt.verify(token, "randomKey123");
     console.log("Authorization 8, Decoded Data: ", decoded);

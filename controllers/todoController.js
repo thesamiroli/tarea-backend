@@ -25,13 +25,14 @@ const addTodo = async function(req, res, next) {
 
 const updateTodo = async function(req, res, next) {
   const todoId = req.params.id;
+
   const response = await todoService.updateTodo(
     req.userData.userId,
     todoId,
     req.body
   );
 
-  res.json(200).json({
+  res.status(200).json({
     message: "Todo Updated Successfully",
     updateTodo: response
   });
@@ -40,7 +41,7 @@ const updateTodo = async function(req, res, next) {
 const deleteTodo = async function(req, res, next) {
   const todoId = req.params.id;
   await todoService.deleteTodo(req.userData.userId, todoId);
-  res.json(200).json({
+  res.status(200).json({
     message: "Todo Deleted Successfully"
   });
 };

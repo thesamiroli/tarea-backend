@@ -2,11 +2,23 @@ const mongoose = require("mongoose");
 const authorization = require("../middlewares/authorization");
 const User = require("../models/user");
 
-const sendResponse = function(status, msg) {
-  return {
-    statusCode: status,
-    message: msg
-  };
+const sendResponse = function(status, msg, token) {
+  if (token) {
+    return {
+      statusCode: status,
+      data: {
+        message: msg,
+        token: token
+      }
+    };
+  } else {
+    return {
+      statusCode: status,
+      data: {
+        message: msg
+      }
+    };
+  }
 };
 
 const checkForDuplicate = async function(key, value) {
@@ -44,8 +56,8 @@ const login = async function(inputEmail, inputPassword) {
   const response = await User.find({ email: inputEmail }).then(response => {
     if (response.length > 0) {
       if (inputPassword == response[0].password) {
-        authorization.generateToken(response);
-        return sendResponse(200, "Authorization successful");
+        const token = authorization.generateToken(response);
+        return sendResponse(200, "Authorization successful", token);
       } else return sendResponse(401, "Wrong Password");
     } else return sendResponse(401, "Email not found");
   });

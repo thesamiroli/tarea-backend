@@ -6,12 +6,12 @@ const register = async function(req, res, next) {
     req.body.username,
     req.body.password
   );
-  res.status(response.statusCode).send(response.message);
+  res.status(response.statusCode).send(response.data);
 };
 
 const login = async function(req, res, next) {
   const response = await userService.login(req.body.email, req.body.password);
-  res.status(response.statusCode).send(response.message);
+  res.status(response.statusCode).send(response.data);
 };
 
 module.exports = {

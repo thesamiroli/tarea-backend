@@ -37,8 +37,14 @@ const deleteTodo = async function(userId, todoId) {
   });
 };
 
-const updateTodo = function(userId, todoId, updatedTodo) {
-  const response = Todo.update();
+const updateTodo = async function(userId, todoId, updatedTodo) {
+  console.log("Updated Todo", updatedTodo);
+  const resp = await Todo.update(
+    { authorId: userId, _id: todoId },
+    { checked: updatedTodo.checked }
+  );
+  console.log("resp", resp);
+  return resp;
 };
 
 module.exports = {
