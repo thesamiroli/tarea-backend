@@ -11,7 +11,6 @@ const getSpecificTodo = async function(userId, todoId) {
     authorId: userId,
     _id: todoId
   });
-  console.log("TS14", response);
   return response;
 };
 
@@ -38,7 +37,6 @@ const deleteTodo = async function(userId, todoId) {
 };
 
 const updateTodo = async function(userId, todoId, updatedTodo) {
-  console.log("Updated Todo", updatedTodo);
   const resp = await Todo.update(
     { authorId: userId, _id: todoId },
     { checked: updatedTodo.checked }
